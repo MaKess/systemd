@@ -399,6 +399,9 @@ struct Network {
 
         /* NTP */
         char **ntp;
+
+        /* Orange ISP */
+        bool orange_isp;
 };
 
 Network *network_ref(Network *network);

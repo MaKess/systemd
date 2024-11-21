@@ -20,6 +20,7 @@
 ***/
 
 #include <inttypes.h>
+#include <stdbool.h>
 #include <net/ethernet.h>
 #include <sys/types.h>
 
@@ -43,6 +44,10 @@ enum {
 typedef struct sd_dhcp6_client sd_dhcp6_client;
 
 typedef void (*sd_dhcp6_client_callback_t)(sd_dhcp6_client *client, int event, void *userdata);
+int sd_dhcp6_client_set_orange_isp(
+                sd_dhcp6_client *client,
+                bool orange_isp);
+
 int sd_dhcp6_client_set_callback(
                 sd_dhcp6_client *client,
                 sd_dhcp6_client_callback_t cb,

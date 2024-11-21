@@ -33,6 +33,16 @@
 
 static int client_start_transaction(sd_dhcp6_client *client, DHCP6State state);
 
+int sd_dhcp6_client_set_orange_isp(sd_dhcp6_client *client, bool orange_isp) {
+        assert_return(client, -EINVAL);
+
+        if (orange_isp)
+                log_dhcp6_client(client, "Setting Orange-ISP flag");
+
+        client->orange_isp = orange_isp;
+        return 0;
+}
+
 int sd_dhcp6_client_set_callback(
                 sd_dhcp6_client *client,
                 sd_dhcp6_client_callback_t cb,
@@ -391,7 +401,7 @@ int sd_dhcp6_client_set_request_option(sd_dhcp6_client *client, uint16_t option)
         assert_return(client, -EINVAL);
         assert_return(!sd_dhcp6_client_is_running(client), -EBUSY);
 
-        if (!dhcp6_option_can_request(option))
+        if (!client->orange_isp && !dhcp6_option_can_request(option))
                 return -EINVAL;
 
         opt = htobe16(option);
@@ -707,6 +717,13 @@ static int client_append_oro(sd_dhcp6_client *client, uint8_t **buf, size_t *off
 
         case DHCP6_STATE_SOLICITATION:
                 n = client->n_req_opts;
+
+                if (client->orange_isp) {
+                        // the Livebox doesn't add this option
+                        req_opts = client->req_opts;
+                        break;
+                }
+
                 p = new(be16_t, n + 1);
                 if (!p)
                         return -ENOMEM;

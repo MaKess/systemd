@@ -491,6 +491,8 @@ int network_load_one(Manager *manager, OrderedHashmap **networks, const char *fi
 
                 .ipoib_mode = _IP_OVER_INFINIBAND_MODE_INVALID,
                 .ipoib_umcast = -1,
+
+                .orange_isp = false,
         };
 
         r = config_parse_many(

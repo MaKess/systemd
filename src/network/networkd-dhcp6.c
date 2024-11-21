@@ -601,6 +601,10 @@ static int dhcp6_configure(Link *link) {
         if (r < 0)
                 return log_link_debug_errno(link, r, "DHCPv6 CLIENT: Failed to create DHCPv6 client: %m");
 
+        r = sd_dhcp6_client_set_orange_isp(client, link->network->orange_isp);
+        if (r < 0)
+                return log_link_debug_errno(link, r, "DHCPv6 CLIENT: Failed to set Orange ISP: %m");
+
         r = sd_dhcp6_client_attach_event(client, link->manager->event, 0);
         if (r < 0)
                 return log_link_debug_errno(link, r, "DHCPv6 CLIENT: Failed to attach event: %m");
